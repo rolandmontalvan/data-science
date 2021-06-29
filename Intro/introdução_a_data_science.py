@@ -99,3 +99,70 @@ sns.barplot(x="original_language", y = "total", data = contagem_de_lingua)
 
 sns.catplot(x = "original_language", kind="count", data = tmdb)
 
+plt.pie(contagem_de_lingua["total"], labels = contagem_de_lingua["original_language"])
+
+total_por_lingua = tmdb["original_language"].value_counts()
+total_geral = total_por_lingua.sum()
+total_de_ingles = total_por_lingua.loc["en"]
+total_do_resto = total_geral - total_de_ingles
+print(total_de_ingles, total_do_resto)
+
+dados = {
+    'lingua' : ['ingles','outros'],
+    'total' : [total_de_ingles, total_do_resto]
+}
+dados = pd.DataFrame(dados)
+sns.barplot(x="lingua", y="total", data = dados)
+
+plt.pie(dados["total"], labels = dados["lingua"])
+
+total_por_lingua_de_outros_filmes = tmdb.query("original_language != 'en'").original_language.value_counts()
+total_por_lingua_de_outros_filmes
+
+filmes_sem_lingua_original_em_ingles = tmdb.query("original_language != 'en'")
+
+sns.catplot(x = "original_language", kind="count",
+              data = filmes_sem_lingua_original_em_ingles)
+
+sns.catplot(x = "original_language", kind="count",
+              data = filmes_sem_lingua_original_em_ingles,
+              aspect = 2,
+              palette="GnBu_d",
+              order = total_por_lingua_de_outros_filmes.index)
+
+"""# Revisando o papel da média, mediana, medidas de tendência central, dispersão, desvio padrão, box plot, histograma"""
+
+filmes.head(2)
+
+notas_do_toy_story = notas.query("filmeId==1")
+notas_do_jumanji = notas.query("filmeId==2")
+print(len(notas_do_toy_story), len(notas_do_jumanji))
+
+print("Nota média do Toy Story %.2f" % notas_do_toy_story.nota.mean())
+print("Nota média do Jumanji %.2f" % notas_do_jumanji.nota.mean())
+
+print(notas_do_toy_story.nota.std(), notas_do_jumanji.nota.std())
+
+print("Nota mediana do Toy Story %.2f" % notas_do_toy_story.nota.median())
+print("Nota mediana do Jumanji %.2f" % notas_do_jumanji.nota.median())
+
+import numpy as np
+
+filme1 = np.append(np.array([2.5] * 10), np.array([3.5] * 10))
+filme2 = np.append(np.array([5] * 10), np.array([1] * 10))
+
+print(filme1.mean(), filme2.mean())
+print(np.std(filme1), np.std(filme2))
+print(np.median(filme1), np.median(filme2))
+
+plt.hist(filme1)
+plt.hist(filme2)
+
+plt.boxplot([filme1, filme2])
+
+
+
+plt.boxplot([notas_do_toy_story.nota, notas_do_jumanji.nota])
+
+sns.boxplot(x = "filmeId", y = "nota", data = notas.query("filmeId in [1,2,3,4,5]"))
+
